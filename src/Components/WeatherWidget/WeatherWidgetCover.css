@@ -1,0 +1,70 @@
+.WeatherWidgetCover {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #f1f8f9;
+  position: relative;
+}
+
+.WeatherWidgetCover__Icon {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-70%);
+}
+
+.WeatherWidgetCover__Panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.WeatherWidgetCover__City {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.WeatherWidgetCover__CityName,
+.WeatherWidgetCover__CityWeather {
+  font-weight: 500;
+}
+
+.WeatherWidgetCover__Temp {
+  font-size: 48px;
+}
+
+.WeatherWidgetCover__Date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #34ace0;
+  color: white;
+  padding: 8px;
+}
+
+.WeatherWidgetCover__Nav {
+  font-size: 48px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  justify-content: space-between;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 50%;
+  height: 50%;
+  opacity: 0;
+  padding: 0 8px;
+  transition: opacity 0.2s;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.WeatherWidgetCover:hover > .WeatherWidgetCover__Nav {
+  opacity: 1;
+}

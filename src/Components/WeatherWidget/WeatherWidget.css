@@ -1,0 +1,25 @@
+.WeatherWidget {
+  max-width: 350px;
+  width: 100%;
+  border: 1px solid #2d3436;
+  border-radius: 5px;
+  margin: 10px auto;
+}
+
+.WeatherWidget__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100px;
+  background: #2d3436;
+}
+
+.WeatherWidget__footer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
