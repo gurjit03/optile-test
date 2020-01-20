@@ -1,0 +1,9 @@
+.WeatherWidget__Card {
+  min-width: 100px;
+  min-height: 100px;
+  padding: 8px;
+}
+
+.WeatherWidget__Card__Head {
+  font-weight: 500;
+}

@@ -5,7 +5,6 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 16px;
-  background-color: #f1f8f9;
   position: relative;
 }
 
@@ -28,8 +27,8 @@
   justify-content: space-around;
 }
 
-.WeatherWidgetCover__CityName,
 .WeatherWidgetCover__CityWeather {
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -37,18 +36,9 @@
   font-size: 48px;
 }
 
-.WeatherWidgetCover__Date {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #34ace0;
-  color: white;
-  padding: 8px;
-}
-
 .WeatherWidgetCover__Nav {
   font-size: 48px;
-  width: 100%;
+  width: 90%;
   left: 0;
   right: 0;
   justify-content: space-between;

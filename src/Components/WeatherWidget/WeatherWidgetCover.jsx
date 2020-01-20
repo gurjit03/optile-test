@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
 import ReactAnimatedWeather from "react-animated-weather";
 
+import { Typography, makeStyles } from "@material-ui/core";
 import { WeatherIconConstants } from "./constants";
 import { getDateFromCurrentDay } from "../../utils";
 import "./WeatherWidgetCover.css";
 
+const useStyles = makeStyles({
+  WeatherType: {
+    fontStyle: "italic",
+    width: "100%",
+    textAlign: "center",
+    fontSize: 32,
+    fontWeight: 500
+  }
+});
+
 const WeatherWidgetCover = props => {
   const { currentDay, onArrowClick, data } = props;
+  const classes = useStyles();
   // console.log(currentDay, "current day...");
   let weatherDetails = data;
   let weatherType, temp, cityName;
@@ -24,17 +36,15 @@ const WeatherWidgetCover = props => {
           size={WeatherIconConstants.size}
           animate={true}
         />
+        <Typography
+          classes={{
+            root: classes.WeatherType
+          }}
+        >
+          {weatherType}
+        </Typography>
       </div>
-      <div className="WeatherWidgetCover__Panel">
-        <p className="WeatherWidgetCover__Temp">{temp}F</p>
-        <div className="WeatherWidgetCover__City">
-          <p className="WeatherWidgetCover__CityWeather">{weatherType}</p>
-        </div>
-
-        <div onClick={() => new Date()} className="WeatherWidgetCover__Date">
-          <span>{getDateFromCurrentDay(currentDay)}</span>
-        </div>
-      </div>
+      <div className="WeatherWidgetCover__Panel"></div>
 
       <div className="WeatherWidgetCover__Nav">
         <span
@@ -45,7 +55,7 @@ const WeatherWidgetCover = props => {
         </span>
         <span
           className="WeatherWidgetCover__Nav__MoveForward"
-          onClick={current => onArrowClick(Math.min(currentDay + 1, 4))}
+          onClick={current => onArrowClick(Math.min(currentDay + 1, 5))}
         >
           {">"}
         </span>
