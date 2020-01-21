@@ -28,6 +28,7 @@ import PaginateArrows from "../PaginateControls/";
 import Loader from "../Loader";
 
 import { useGlobalState } from "../../store";
+import { PrimaryBrand } from "../../jss.js";
 import {
   normalizeWeatherData,
   normalizeForecastData,
@@ -170,12 +171,12 @@ const WeatherWidget = props => {
         >
           <FormControlLabel
             value="fahrenheit"
-            control={<Radio color="primary" />}
+            control={<Radio color={PrimaryBrand} />}
             label="Fahrenheit"
           />
           <FormControlLabel
             value="celcius"
-            control={<Radio color="primary" />}
+            control={<Radio color={PrimaryBrand} />}
             label="Celcius"
           />
         </RadioGroup>
@@ -187,46 +188,23 @@ const WeatherWidget = props => {
           container
           spacing={2}
         >
-          <Grid item xs={12} sm={4} md={2}>
-            <WeatherWidgetCard
-              onClick={() => setCurrentDay(1)}
-              temp={currentTemp}
-              selected={currentDay === 1}
-              date={getDateFromCurrentDay(1)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={2}>
-            <WeatherWidgetCard
-              onClick={() => setCurrentDay(2)}
-              temp={forecastTemperatures.length && forecastTemperatures[1].temp}
-              selected={currentDay === 2}
-              date={getDateFromCurrentDay(2)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={2}>
-            <WeatherWidgetCard
-              onClick={() => setCurrentDay(3)}
-              temp={forecastTemperatures.length && forecastTemperatures[2].temp}
-              selected={currentDay === 3}
-              date={getDateFromCurrentDay(3)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={2}>
-            <WeatherWidgetCard
-              onClick={() => setCurrentDay(4)}
-              temp={forecastTemperatures.length && forecastTemperatures[3].temp}
-              selected={currentDay === 4}
-              date={getDateFromCurrentDay(4)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={2}>
-            <WeatherWidgetCard
-              onClick={() => setCurrentDay(5)}
-              temp={forecastTemperatures.length && forecastTemperatures[4].temp}
-              selected={currentDay === 5}
-              date={getDateFromCurrentDay(5)}
-            />
-          </Grid>
+          {forecastTemperatures &&
+            forecastTemperatures.map((data, index) => {
+              const currentSelectedDataIndex = index + 1;
+              console.log(data, "data...");
+              return (
+                <Grid item xs={12} sm={4} md={2}>
+                  <WeatherWidgetCard
+                    onClick={() => setCurrentDay(currentSelectedDataIndex)}
+                    temp={
+                      currentSelectedDataIndex === 1 ? currentTemp : data.temp
+                    }
+                    selected={currentDay === currentSelectedDataIndex}
+                    date={getDateFromCurrentDay(index)}
+                  />
+                </Grid>
+              );
+            })}
         </Grid>
         <div style={{ height: "400px", width: "100%" }}>
           {barChartData && (
@@ -245,7 +223,7 @@ const WeatherWidget = props => {
                 <YAxis label="Temp" dataKey="temp" />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="temp" fill="#3498db" />
+                <Bar dataKey="temp" fill={PrimaryBrand} />
               </BarChart>
             </ResponsiveContainer>
           )}

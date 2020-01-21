@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Paper, Typography, makeStyles } from "@material-ui/core";
+import { WbSunny, AccessTime } from "@material-ui/icons";
+import { PrimaryBrand } from "../../jss.js";
 
 const useStyles = makeStyles({
   WeatherWidgetCard: {
@@ -10,6 +12,14 @@ const useStyles = makeStyles({
   },
   headings: {
     fontWeight: 500
+  },
+  iconStyles: {
+    fontSize: 12,
+    color: PrimaryBrand,
+    marginRight: 8
+  },
+  text: {
+    marginBottom: 8
   }
 });
 
@@ -33,17 +43,19 @@ const WeatherWidgetCard = ({
           root: classes.headings
         }}
       >
+        <WbSunny className={classes.iconStyles} />
         Temp:
       </Typography>{" "}
-      {temp}
+      <Typography classes={{ root: classes.text }}>{temp}</Typography>
       <Typography
         classes={{
           root: classes.headings
         }}
       >
+        <AccessTime className={classes.iconStyles} />
         Date:
       </Typography>{" "}
-      {date}
+      <Typography classes={{ root: classes.text }}>{date}</Typography>
     </Paper>
   );
 };
