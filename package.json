@@ -6,12 +6,12 @@
   "main": "src/index.js",
   "dependencies": {
     "@material-ui/core": "^4.8.3",
+    "@material-ui/icons": "^4.5.1",
     "lodash.throttle": "^4.1.1",
     "moment": "2.24.0",
     "npx": "^10.2.0",
     "prop-types": "^15.7.2",
     "react": "16.12.0",
-    "react-animated-weather": "4.0.0",
     "react-dom": "16.12.0",
     "react-geolocated": "3.0.1",
     "react-hooks-global-state": "^0.17.0",

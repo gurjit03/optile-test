@@ -10,7 +10,9 @@ export default function App() {
   return (
     <div className="App">
       <GlobalStateProvider>
-        <Typography variant="h2">Track the weather details</Typography>
+        <Typography align="center" variant="h4" component="h1">
+          Track the weather details
+        </Typography>
         <WeatherWidget />
       </GlobalStateProvider>
     </div>

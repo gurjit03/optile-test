@@ -1,12 +1,10 @@
+import moment from "moment";
 import { getCelciusFromKelvin, getFahrenheitFromKelvin } from "../../utils";
 
-import moment from "moment";
+export const createBarChartData = (forecastData, currentDay, tempScale) => {
+  if (!Object.keys(forecastData).length) return forecastData;
 
-export const createBarChartData = (weatherData, currentDay, tempScale) => {
-  if (!Object.keys(weatherData).length) return weatherData;
-
-  console.log(weatherData, currentDay, "..");
-  return weatherData[currentDay - 1].map((data, index) => {
+  return forecastData[currentDay - 1].map((data, index) => {
     return {
       time: moment(new Date(data.dt_txt)).get("hour") + "",
       temp:
@@ -21,10 +19,30 @@ export const getCurrentTempFromWeatherData = (
   currentWeatherData,
   tempScale
 ) => {
-  if (!Object.keys(currentWeatherData).length) return currentWeatherData;
+  if (!Object.keys(currentWeatherData).length) return 1;
 
-  console.log(currentWeatherData, "curentWeatherData");
   return tempScale === "celcius"
-    ? getCelciusFromKelvin(currentWeatherData.main.temp)
-    : getFahrenheitFromKelvin(currentWeatherData.main.temp);
+    ? getCelciusFromKelvin(currentWeatherData.temp).toFixed(2)
+    : getFahrenheitFromKelvin(currentWeatherData.temp).toFixed(2);
+};
+
+export const getTemperaturesFromForecastData = (forecastData, tempScale) => {
+  if (!forecastData[0].length) return [];
+  else {
+    console.log(forecastData, "forecastData");
+    return forecastData.map((data, index) => {
+      const tempTotal = data.reduce(getTotal, 0);
+      const tempAvg = tempTotal / 8;
+      return {
+        temp:
+          tempScale === "celcius"
+            ? getCelciusFromKelvin(tempAvg).toFixed(2)
+            : getFahrenheitFromKelvin(tempAvg).toFixed(2)
+      };
+    });
+  }
+};
+
+const getTotal = (initialValue, currentData) => {
+  return initialValue + currentData.main.temp;
 };

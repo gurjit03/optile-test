@@ -19,38 +19,44 @@ import {
   Legend
 } from "recharts";
 
-import makeWeatherApiRequest from "./actions/make-weather-api-request";
-import WeatherWidgetCover from "./WeatherWidgetCover";
-import WeatherWidgetCard from "./WeatherWidgetCard";
-import Loader from "../Loader";
-
 import throttle from "lodash.throttle";
+import makeWeatherApiRequest from "./actions/make-weather-api-request";
+// import WeatherWidgetCover from "./WeatherWidgetCover";
+import WeatherWidgetCard from "./WeatherWidgetCard";
+
+import Loader from "../Loader";
 import "./WeatherWidget.css";
 
 import { useGlobalState } from "../../store";
 import {
-  getTemperaturesFromWeatherData,
-  getCelciusFromKelvin,
-  getFahrenheitFromKelvin,
   normalizeWeatherData,
+  normalizeForecastData,
   getDateFromCurrentDay
 } from "../../utils";
 import {
   createBarChartData,
+  getTemperaturesFromForecastData,
   getCurrentTempFromWeatherData
 } from "./helpers.js";
+import PaginateArrows from "../PaginateControls/";
 
 const THROTTLE_TIME_WEATHER = 100000; //10mins
 const THROTTLE_TIME_FORECAST = 600000; //60 mins
 
 const useStyles = makeStyles({
   WeatherWidget: {
+    position: "relative",
     background: "#f5f6fa",
     padding: "16px",
     minHeight: "400px",
     width: "100%",
     borderRadius: "5px",
     margin: "10px auto"
+  },
+  TempScaleSelectionGroup: {
+    marginTop: "10px",
+    flexDirection: "row",
+    justifyContent: "center"
   }
 });
 
@@ -61,7 +67,7 @@ const WeatherWidget = props => {
   const [currentWeatherData, setCurrentWeatherData] = useGlobalState(
     "currentWeatherData"
   );
-  const [weatherData, setWeatherData] = useGlobalState("weatherData");
+  const [forecastData, setforecastData] = useGlobalState("forecastData");
   const [isLoading, setIsLoading] = useGlobalState("isLoading");
   const [tempScale, setTempScale] = useState("fahrenheit");
 
@@ -79,9 +85,9 @@ const WeatherWidget = props => {
       if (response.status === 200) {
         const responseData = await response.json();
         if (type === "weather") {
-          setCurrentWeatherData(responseData);
+          setCurrentWeatherData(normalizeWeatherData(responseData));
         } else {
-          setWeatherData(normalizeWeatherData(responseData, tempScale)); // pick up the last forecast data among the all
+          setforecastData(normalizeForecastData(responseData));
         }
         setIsLoading(false);
       }
@@ -114,10 +120,12 @@ const WeatherWidget = props => {
 
   useEffect(() => {
     if (coords && coords.latitude && coords.longitude) {
-      memoizedFetchWeather();
+      if (currentDay === 1) {
+        memoizedFetchWeather();
+      }
       memoizedFetchForecast();
     }
-  }, [coords]);
+  }, [currentDay, coords]);
 
   if (isLoading) {
     return <Loader />;
@@ -126,19 +134,38 @@ const WeatherWidget = props => {
   else if (!props.isGeolocationEnabled)
     return <div>Geolocation is not enabled</div>;
 
-  const barChartData = createBarChartData(weatherData, currentDay, tempScale);
+  const barChartData = createBarChartData(forecastData, currentDay, tempScale);
   const currentTemp = getCurrentTempFromWeatherData(
     currentWeatherData,
     tempScale
   );
+
+  const forecastTemperatures = getTemperaturesFromForecastData(
+    forecastData,
+    tempScale
+  );
+  // const forecastTemperatures = [];
+
+  // console.log(forecastTemperatures, currentTemp, barChartData, "%%%%%%%%");
   return (
-    <div style={{ display: "flex", maxWidth: 800, padding: 16 }}>
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        margin: "0 auto",
+        maxWidth: 800,
+        padding: 16
+      }}
+    >
       <Card
         classes={{
           root: classes.WeatherWidget
         }}
       >
         <RadioGroup
+          classes={{
+            root: classes.TempScaleSelectionGroup
+          }}
           onChange={event => {
             setTempScale(event.target.value);
           }}
@@ -157,10 +184,7 @@ const WeatherWidget = props => {
             label="Celcius"
           />
         </RadioGroup>
-        <WeatherWidgetCover
-          onArrowClick={setCurrentDay}
-          currentDay={currentDay}
-        />
+
         <Grid
           direction="row"
           justify="center"
@@ -177,49 +201,61 @@ const WeatherWidget = props => {
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              temp={forecastTemperatures.length && forecastTemperatures[1].temp}
               selected={currentDay === 2}
               date={getDateFromCurrentDay(2)}
             />
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              temp={forecastTemperatures.length && forecastTemperatures[2].temp}
               selected={currentDay === 3}
               date={getDateFromCurrentDay(3)}
             />
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              temp={forecastTemperatures.length && forecastTemperatures[3].temp}
               selected={currentDay === 4}
               date={getDateFromCurrentDay(4)}
             />
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              temp={forecastTemperatures.length && forecastTemperatures[4].temp}
               selected={currentDay === 5}
               date={getDateFromCurrentDay(5)}
             />
           </Grid>
         </Grid>
         <div style={{ height: "400px", width: "100%" }}>
-          <ResponsiveContainer>
-            <BarChart
-              width={500}
-              height={300}
-              data={barChartData}
-              margin={{
-                top: 20,
-                bottom: 20,
-                left: 0
-              }}
-            >
-              <XAxis dataKey="time" />
-              <YAxis label="Temp" dataKey="temp" />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="temp" fill="#3498db" />
-            </BarChart>
-          </ResponsiveContainer>
+          {barChartData && (
+            <ResponsiveContainer>
+              <BarChart
+                width={500}
+                height={300}
+                data={barChartData}
+                margin={{
+                  top: 20,
+                  bottom: 20,
+                  left: 0
+                }}
+              >
+                <XAxis dataKey="time" />
+                <YAxis label="Temp" dataKey="temp" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="temp" fill="#3498db" />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
+        <PaginateArrows
+          onRightArrowClick={() => setCurrentDay(Math.min(currentDay + 1, 5))}
+          onLeftArrowClick={() => setCurrentDay(Math.max(currentDay - 1, 1))}
+          displayLeft={currentDay != 1}
+          displayRight={currentDay != 5}
+        />
       </Card>
     </div>
   );

@@ -1,19 +1,28 @@
 import { chunkArrayToGroups } from "./chunk-array-to-groups";
 
-export const normalizeWeatherData = (weatherData = {}, tempScale) => {
-  if (!Object.keys(weatherData)) return weatherData;
+export const normalizeForecastData = (forecastData = {}) => {
+  if (!Object.keys(forecastData)) return forecastData;
 
-  return chunkArrayToGroups(weatherData.list, 5);
+  return chunkArrayToGroups(forecastData.list, 5);
 };
 
-export const getTemperaturesFromWeatherData = (
-  weatherData = {},
-  currentDay = 1
-) => {
-  // console.log(weatherData);
+export const normalizeWeatherData = (weatherData = {}) => {
   if (!Object.keys(weatherData)) return weatherData;
 
-  return weatherData.list.filter(
-    (weatherData, index) => index < currentDay * 7
+  return {
+    weatherType: weatherData.weather[0].main,
+    temp: weatherData.main.temp
+  };
+};
+
+export const getTemperaturesFromforecastData = (
+  forecastData = {},
+  currentDay = 1
+) => {
+  // console.log(forecastData);
+  if (!Object.keys(forecastData)) return forecastData;
+
+  return forecastData.list.filter(
+    (forecastData, index) => index < currentDay * 7
   );
 };

@@ -6,5 +6,6 @@ export {
 } from "./convert-temperature";
 export {
   normalizeWeatherData,
-  getTemperaturesFromWeatherData
+  normalizeForecastData,
+  getTemperaturesFromforecastData
 } from "./weather-data";
