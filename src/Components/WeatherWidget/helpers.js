@@ -1,4 +1,3 @@
-import moment from "moment";
 import { getCelciusFromKelvin, getFahrenheitFromKelvin } from "../../utils";
 
 export const createBarChartData = (forecastData, currentDay, tempScale) => {
@@ -6,11 +5,11 @@ export const createBarChartData = (forecastData, currentDay, tempScale) => {
 
   return forecastData[currentDay - 1].map((data, index) => {
     return {
-      time: moment(new Date(data.dt_txt)).get("hour") + "",
+      time: data.time,
       temp:
         tempScale === "celcius"
-          ? getCelciusFromKelvin(data.main.temp)
-          : getFahrenheitFromKelvin(data.main.temp)
+          ? getCelciusFromKelvin(data.temp)
+          : getFahrenheitFromKelvin(data.temp)
     };
   });
 };
@@ -27,9 +26,8 @@ export const getCurrentTempFromWeatherData = (
 };
 
 export const getTemperaturesFromForecastData = (forecastData, tempScale) => {
-  if (!forecastData[0].length) return [];
+  if (!forecastData.length) return [];
   else {
-    console.log(forecastData, "forecastData");
     return forecastData.map((data, index) => {
       const tempTotal = data.reduce(getTotal, 0);
       const tempAvg = tempTotal / 8;
@@ -44,5 +42,5 @@ export const getTemperaturesFromForecastData = (forecastData, tempScale) => {
 };
 
 const getTotal = (initialValue, currentData) => {
-  return initialValue + currentData.main.temp;
+  return initialValue + currentData.temp;
 };

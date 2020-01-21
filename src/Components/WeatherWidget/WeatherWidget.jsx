@@ -20,12 +20,12 @@ import {
 } from "recharts";
 
 import throttle from "lodash.throttle";
+
 import makeWeatherApiRequest from "./actions/make-weather-api-request";
 // import WeatherWidgetCover from "./WeatherWidgetCover";
 import WeatherWidgetCard from "./WeatherWidgetCard";
-
+import PaginateArrows from "../PaginateControls/";
 import Loader from "../Loader";
-import "./WeatherWidget.css";
 
 import { useGlobalState } from "../../store";
 import {
@@ -38,7 +38,6 @@ import {
   getTemperaturesFromForecastData,
   getCurrentTempFromWeatherData
 } from "./helpers.js";
-import PaginateArrows from "../PaginateControls/";
 
 const THROTTLE_TIME_WEATHER = 100000; //10mins
 const THROTTLE_TIME_FORECAST = 600000; //60 mins
@@ -139,14 +138,10 @@ const WeatherWidget = props => {
     currentWeatherData,
     tempScale
   );
-
   const forecastTemperatures = getTemperaturesFromForecastData(
     forecastData,
     tempScale
   );
-  // const forecastTemperatures = [];
-
-  // console.log(forecastTemperatures, currentTemp, barChartData, "%%%%%%%%");
   return (
     <div
       style={{
@@ -194,6 +189,7 @@ const WeatherWidget = props => {
         >
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              onClick={() => setCurrentDay(1)}
               temp={currentTemp}
               selected={currentDay === 1}
               date={getDateFromCurrentDay(1)}
@@ -201,6 +197,7 @@ const WeatherWidget = props => {
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              onClick={() => setCurrentDay(2)}
               temp={forecastTemperatures.length && forecastTemperatures[1].temp}
               selected={currentDay === 2}
               date={getDateFromCurrentDay(2)}
@@ -208,6 +205,7 @@ const WeatherWidget = props => {
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              onClick={() => setCurrentDay(3)}
               temp={forecastTemperatures.length && forecastTemperatures[2].temp}
               selected={currentDay === 3}
               date={getDateFromCurrentDay(3)}
@@ -215,6 +213,7 @@ const WeatherWidget = props => {
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              onClick={() => setCurrentDay(4)}
               temp={forecastTemperatures.length && forecastTemperatures[3].temp}
               selected={currentDay === 4}
               date={getDateFromCurrentDay(4)}
@@ -222,6 +221,7 @@ const WeatherWidget = props => {
           </Grid>
           <Grid item xs={12} sm={4} md={2}>
             <WeatherWidgetCard
+              onClick={() => setCurrentDay(5)}
               temp={forecastTemperatures.length && forecastTemperatures[4].temp}
               selected={currentDay === 5}
               date={getDateFromCurrentDay(5)}
@@ -241,7 +241,7 @@ const WeatherWidget = props => {
                   left: 0
                 }}
               >
-                <XAxis dataKey="time" />
+                <XAxis label="Time(in 24 hours)" dataKey="time" />
                 <YAxis label="Temp" dataKey="temp" />
                 <Tooltip />
                 <Legend />
@@ -253,8 +253,8 @@ const WeatherWidget = props => {
         <PaginateArrows
           onRightArrowClick={() => setCurrentDay(Math.min(currentDay + 1, 5))}
           onLeftArrowClick={() => setCurrentDay(Math.max(currentDay - 1, 1))}
-          displayLeft={currentDay != 1}
-          displayRight={currentDay != 5}
+          displayLeft={currentDay !== 1}
+          displayRight={currentDay !== 5}
         />
       </Card>
     </div>
