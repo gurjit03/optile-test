@@ -191,7 +191,6 @@ const WeatherWidget = props => {
           {forecastTemperatures &&
             forecastTemperatures.map((data, index) => {
               const currentSelectedDataIndex = index + 1;
-              console.log(data, "data...");
               return (
                 <Grid item xs={12} sm={4} md={2}>
                   <WeatherWidgetCard
