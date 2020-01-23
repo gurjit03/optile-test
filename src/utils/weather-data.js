@@ -19,7 +19,7 @@ export const normalizeWeatherData = (weatherData = {}) => {
   if (!Object.keys(weatherData)) return weatherData;
 
   return {
-    weatherType: weatherData.weather[0].main,
+    condition: weatherData.weather[0].description,
     temp: weatherData.main.temp
   };
 };
