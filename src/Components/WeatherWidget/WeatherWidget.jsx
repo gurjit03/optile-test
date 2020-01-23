@@ -201,6 +201,7 @@ const WeatherWidget = props => {
               return (
                 <Grid item xs={12} sm={4} md={2}>
                   <WeatherWidgetCard
+                    key={index}
                     onClick={() => setCurrentDay(currentSelectedDataIndex)}
                     temp={
                       currentSelectedDataIndex === 1 ? currentTemp : data.temp
