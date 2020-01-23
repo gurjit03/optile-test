@@ -182,7 +182,12 @@ const WeatherWidget = props => {
             label="Celcius"
           />
         </RadioGroup>
-        {currentWeatherData && <Typography style={{marginBottom: 8}} align="center">Currently it's <span className="ft-w-500">{currentTemp}</span> and <span className="ft-w-500">{currentWeatherData.condition}</span></Typography>}  
+        {currentWeatherData && (
+          <Typography style={{ marginBottom: 8 }} align="center">
+            Currently it's <span className="ft-w-500">{currentTemp}</span> and{" "}
+            <span className="ft-w-500">{currentWeatherData.condition}</span>
+          </Typography>
+        )}
         <Grid
           direction="row"
           justify="center"
@@ -200,7 +205,6 @@ const WeatherWidget = props => {
                     temp={
                       currentSelectedDataIndex === 1 ? currentTemp : data.temp
                     }
-                    
                     selected={currentDay === currentSelectedDataIndex}
                     date={getDateFromCurrentDay(index)}
                   />

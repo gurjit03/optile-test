@@ -26,9 +26,8 @@ const useStyles = makeStyles({
 const WeatherWidgetCard = ({
   onClick,
   selected = false,
-  date = '',
-  temp = '',
-  condition = '',
+  date = "",
+  temp = ""
 }) => {
   const classes = useStyles();
   return (
@@ -57,24 +56,12 @@ const WeatherWidgetCard = ({
         Date:
       </Typography>{" "}
       <Typography classes={{ root: classes.text }}>{date}</Typography>
-      {condition && 
-      <>
-      <Typography
-        classes={{
-          root: classes.headings
-        }}
-      >
-        Condition:
-      </Typography>{" "}
-      <Typography classes={{ root: classes.text }}>{condition}</Typography>
-      </>}  
     </Paper>
   );
 };
 
 WeatherWidgetCard.propTypes = {
   selected: PropTypes.bool,
-  condition: PropTypes.string,
   date: PropTypes.string,
   temp: PropTypes.string,
   onClick: PropTypes.func
