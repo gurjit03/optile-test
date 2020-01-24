@@ -1,5 +1,5 @@
-import moment from "moment";
-import { chunkArrayToGroups } from "./chunk-array-to-groups";
+import moment from 'moment';
+import { chunkArrayToGroups } from './chunk-array-to-groups';
 
 export const normalizeForecastData = (forecastData = {}) => {
   if (!Object.keys(forecastData)) return forecastData;
@@ -8,7 +8,7 @@ export const normalizeForecastData = (forecastData = {}) => {
     return forecastData.map(data => {
       return {
         date: data.dt_txt,
-        time: moment(new Date(data.dt_txt)).get("hour") + "",
+        time: moment(new Date(data.dt_txt)).get('hour') + '',
         temp: data.main.temp
       };
     });
@@ -19,19 +19,14 @@ export const normalizeWeatherData = (weatherData = {}) => {
   if (!Object.keys(weatherData)) return weatherData;
 
   return {
-    condition: weatherData.weather[0].description,
+    condition: weatherData.weather[0].main,
     temp: weatherData.main.temp
   };
 };
 
-export const getTemperaturesFromforecastData = (
-  forecastData = {},
-  currentDay = 1
-) => {
+export const getTemperaturesFromforecastData = (forecastData = {}, currentDay = 1) => {
   // console.log(forecastData);
   if (!Object.keys(forecastData)) return forecastData;
 
-  return forecastData.list.filter(
-    (forecastData, index) => index < currentDay * 7
-  );
+  return forecastData.list.filter((forecastData, index) => index < currentDay * 7);
 };

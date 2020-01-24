@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { geolocated } from "react-geolocated";
-import { toast } from "react-toastify";
+import React, { useCallback, useEffect, useState } from 'react';
+import { geolocated } from 'react-geolocated';
+import { toast } from 'react-toastify';
 import {
   Card,
   Grid,
@@ -8,9 +8,8 @@ import {
   RadioGroup,
   FormControlLabel,
   makeStyles,
-  Typography,
-  emphasize
-} from "@material-ui/core";
+  Typography
+} from '@material-ui/core';
 import {
   ResponsiveContainer,
   BarChart,
@@ -19,84 +18,94 @@ import {
   YAxis,
   Tooltip,
   Legend
-} from "recharts";
+} from 'recharts';
+import ReactAnimatedWeather from 'react-animated-weather';
 
-import throttle from "lodash.throttle";
+import throttle from 'lodash.throttle';
 
-import makeWeatherApiRequest from "./actions/make-weather-api-request";
+import makeWeatherApiRequest from './actions/make-weather-api-request';
 // import WeatherWidgetCover from "./WeatherWidgetCover";
-import WeatherWidgetCard from "./WeatherWidgetCard";
-import PaginateArrows from "../PaginateControls/";
-import Loader from "../Loader";
+import WeatherWidgetCard from './WeatherWidgetCard';
+import PaginateArrows from '../PaginateControls/';
+import Loader from '../Loader';
 
-import { useGlobalState } from "../../store";
-import { PrimaryBrand } from "../../jss.js";
+import { useGlobalState } from '../../store';
+import { PrimaryBrand } from '../../jss.js';
 import {
   normalizeWeatherData,
   normalizeForecastData,
   getDateFromCurrentDay
-} from "../../utils";
+} from '../../utils';
 import {
   createBarChartData,
   getTemperaturesFromForecastData,
   getCurrentTempFromWeatherData
-} from "./helpers.js";
+} from './helpers.js';
+import { WeatherIconConstants } from './constants';
 
 const THROTTLE_TIME_WEATHER = 100000; //10mins
 const THROTTLE_TIME_FORECAST = 600000; //60 mins
 
 const useStyles = makeStyles({
   WeatherWidget: {
-    position: "relative",
-    background: "#f5f6fa",
-    padding: "16px",
-    minHeight: "400px",
-    width: "100%",
-    borderRadius: "5px",
-    margin: "10px auto"
+    position: 'relative',
+    background: '#f5f6fa',
+    padding: '16px',
+    minHeight: '400px',
+    width: '100%',
+    borderRadius: '5px',
+    margin: '10px auto'
+  },
+  WeatherWidget__Condition: {
+    margin: '16px auto',
+    textAlign: 'center'
+  },
+  WeatherWidget__ConditionName: {
+    fontStyle: 'italic',
+    fontSize: '1.5rem'
   },
   TempScaleSelectionGroup: {
-    marginTop: "10px",
-    flexDirection: "row",
-    justifyContent: "center"
+    marginTop: '10px',
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
 
 const WeatherWidget = props => {
   const classes = useStyles();
   const { coords } = props;
-  const [currentDay, setCurrentDay] = useGlobalState("currentDay");
+  const [currentDay, setCurrentDay] = useGlobalState('currentDay');
   const [currentWeatherData, setCurrentWeatherData] = useGlobalState(
-    "currentWeatherData"
+    'currentWeatherData'
   );
-  const [forecastData, setforecastData] = useGlobalState("forecastData");
-  const [isLoading, setIsLoading] = useGlobalState("isLoading");
-  const [tempScale, setTempScale] = useState("fahrenheit");
+  const [forecastData, setforecastData] = useGlobalState('forecastData');
+  const [isLoading, setIsLoading] = useGlobalState('isLoading');
+  const [tempScale, setTempScale] = useState('fahrenheit');
 
-  async function fetchWeather(query, coords, type = "weather") {
+  async function fetchWeather(query, coords, type = 'weather') {
     setIsLoading(true);
     try {
       const requestUrl = makeWeatherApiRequest(type, query);
       const response = await fetch(requestUrl, {
-        method: "GET",
-        mode: "cors",
+        method: 'GET',
+        mode: 'cors',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         }
       });
       if (response.status === 200) {
         const responseData = await response.json();
-        if (type === "weather") {
+        if (type === 'weather') {
           setCurrentWeatherData(normalizeWeatherData(responseData));
         } else {
           setforecastData(normalizeForecastData(responseData));
         }
         setIsLoading(false);
       }
-
+      toast.success('Data loaded successfully');
       setIsLoading(false);
     } catch (err) {
-      toast("Woops due to some reason we failed to fetch weather");
+      toast('Woops due to some reason we failed to fetch weather');
       setIsLoading(false);
     }
   }
@@ -114,7 +123,7 @@ const WeatherWidget = props => {
 
   const memoizedFetchForecast = useCallback(
     throttle(
-      () => fetchWeather(query, coords, "forecast"),
+      () => fetchWeather(query, coords, 'forecast'),
       THROTTLE_TIME_FORECAST
     ),
     [query, coords]
@@ -148,9 +157,9 @@ const WeatherWidget = props => {
   return (
     <div
       style={{
-        position: "relative",
-        display: "flex",
-        margin: "0 auto",
+        position: 'relative',
+        display: 'flex',
+        margin: '0 auto',
         maxWidth: 800,
         padding: 16
       }}
@@ -182,12 +191,28 @@ const WeatherWidget = props => {
             label="Celcius"
           />
         </RadioGroup>
-        {currentWeatherData && (
-          <Typography style={{ marginBottom: 8 }} align="center">
-            Currently it's <span className="ft-w-500">{currentTemp}</span> and{" "}
-            <span className="ft-w-500">{currentWeatherData.condition}</span>
-          </Typography>
-        )}
+        {currentWeatherData &&
+          currentWeatherData.condition &&
+          currentDay === 1 && (
+            <div className={classes.WeatherWidget__Condition}>
+              <ReactAnimatedWeather
+                icon={WeatherIconConstants.getIcon(
+                  currentWeatherData.condition
+                )}
+                color={PrimaryBrand}
+                size={WeatherIconConstants.size}
+                animate={WeatherIconConstants.animate}
+              />
+
+              <Typography
+                classes={{ root: classes.WeatherWidget__ConditionName }}
+              >
+                <span style={{ fontStyle: 'normal' }}>It's </span>
+                {' ' + currentWeatherData.condition + ' '}
+                <span style={{ fontStyle: 'normal' }}>Outside</span>
+              </Typography>
+            </div>
+          )}
         <Grid
           direction="row"
           justify="center"
@@ -199,9 +224,8 @@ const WeatherWidget = props => {
             forecastTemperatures.map((data, index) => {
               const currentSelectedDataIndex = index + 1;
               return (
-                <Grid item xs={12} sm={4} md={2}>
+                <Grid key={index} item xs={12} sm={4} md={2}>
                   <WeatherWidgetCard
-                    key={index}
                     onClick={() => setCurrentDay(currentSelectedDataIndex)}
                     temp={
                       currentSelectedDataIndex === 1 ? currentTemp : data.temp
@@ -213,7 +237,7 @@ const WeatherWidget = props => {
               );
             })}
         </Grid>
-        <div style={{ height: "400px", width: "100%" }}>
+        <div style={{ height: '400px', width: '100%' }}>
           {barChartData && (
             <ResponsiveContainer>
               <BarChart
