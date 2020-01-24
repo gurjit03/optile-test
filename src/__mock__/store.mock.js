@@ -1,6 +1,6 @@
 import { createGlobalState } from 'react-hooks-global-state';
 
-const initialState = {
+export const initialState = {
   currentDay: 1,
   isLoading: false,
   currentWeatherData: {},
