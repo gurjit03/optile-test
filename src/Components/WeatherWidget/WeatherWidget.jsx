@@ -41,6 +41,7 @@ import {
   getTemperaturesFromForecastData,
   getCurrentTempFromWeatherData
 } from './helpers.js';
+
 import { WeatherIconConstants } from './constants';
 
 const THROTTLE_TIME_WEATHER = 100000; //10mins
@@ -71,7 +72,7 @@ const useStyles = makeStyles({
   }
 });
 
-const WeatherWidget = props => {
+export const WeatherWidget = props => {
   const classes = useStyles();
   const { coords } = props;
   const [currentDay, setCurrentDay] = useGlobalState('currentDay');

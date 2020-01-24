@@ -15,7 +15,7 @@
     "react-animated-weather": "^4.0.0",
     "react-dom": "16.12.0",
     "react-geolocated": "3.0.1",
-    "react-hooks-global-state": "^0.17.0",
+    "react-hooks-global-state": "1.0.0-alpha.1",
     "react-scripts": "3.0.1",
     "react-toastify": "5.5.0",
     "recharts": "^2.0.0-beta.1"
